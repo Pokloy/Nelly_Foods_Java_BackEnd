@@ -21,8 +21,8 @@ public class RecruitmentEntity {
 	@Column(name = "inviter_id")
 	private int inviterId;
 	
-	@Column(name = "invitee_id")
-	private int inviteeId;
+	@Column(name = "invited_id")
+	private int invitedId;
 	
 	@Column(name = "status")
 	private String status;

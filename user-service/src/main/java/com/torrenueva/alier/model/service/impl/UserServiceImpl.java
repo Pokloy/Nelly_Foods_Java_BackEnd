@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.torrenueva.alier.model.dao.UserInfoAccountDao;
 import com.torrenueva.alier.model.dao.entity.UserEntity;
 import com.torrenueva.alier.model.dto.UserInfoDto;
+import com.torrenueva.alier.model.kafka.UserEventProducer;
 import com.torrenueva.alier.model.service.UserService;
 
 @Service
@@ -20,29 +21,33 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder encoder;
 	
+	@Autowired
+	private UserEventProducer userEventProducerKafka;
+	
 	@Override
 	public List<UserInfoDto> getAllUsers() {
-		List<UserEntity> entityList = userRepository.getAllUser();
-		List<UserInfoDto> dtoList = new ArrayList<>();
-		for(UserEntity entity: entityList) {
-			UserInfoDto dto = new UserInfoDto();
-			dto.setAddress(entity.getAddress());
-			dto.setEmail(entity.getEmail());
-			dto.setFamilyName(entity.getFamilyName());
-			dto.setFirstName(entity.getFirstName());
-			dto.setMiddleName(entity.getMiddleName());
-			dto.setPassword(entity.getPassword());
-			dto.setPhoneNumber(entity.getPhoneNumber());
-			dto.setUserType(entity.getUserType());
-			dtoList.add(dto);
-		}
-		
-		if(entityList != null) {
-			return dtoList;
-		} else {
-			return new ArrayList<>();
-		}
+	    List<UserEntity> entityList = userRepository.getAllUser();
+	    if (entityList == null) {
+	        return new ArrayList<>();
+	    }
+
+	    return entityList.stream()
+	            .map(entity -> {
+	                UserInfoDto dto = new UserInfoDto();
+	                dto.setUserId(entity.getUserId());
+	                dto.setAddress(entity.getAddress());
+	                dto.setEmail(entity.getEmail());
+	                dto.setFamilyName(entity.getFamilyName());
+	                dto.setFirstName(entity.getFirstName());
+	                dto.setMiddleName(entity.getMiddleName());
+	                dto.setPassword(entity.getPassword());
+	                dto.setPhoneNumber(entity.getPhoneNumber());
+	                dto.setUserType(entity.getUserType());
+	                return dto;
+	            })
+	            .toList();
 	}
+
 	
 	@Override
 	public String saveUser(UserInfoDto userDto) {
@@ -64,7 +69,11 @@ public class UserServiceImpl implements UserService {
 	        userEntity.setPhoneNumber(userDto.getPhoneNumber());
 	        userEntity.setUserType(userDto.getUserType());
 	        userEntity.setPassword(encoder.encode(userDto.getPassword()));
-	        userRepository.save(userEntity);
+	        UserEntity newUserId = userRepository.save(userEntity);
+	        UserEntity refererUser = userRepository.getSpecificUserByEmail(userDto.getRefferEmail());
+	        userDto.setUserId(newUserId.getUserId());
+	        userDto.setReferedrId(refererUser.getUserId());
+	        userEventProducerKafka.sendUserEvent(userDto);
 	        return msg;
 	    } catch (Exception e) {
 	        // Optionally log the exception
@@ -119,4 +128,6 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+	
+	
 }
