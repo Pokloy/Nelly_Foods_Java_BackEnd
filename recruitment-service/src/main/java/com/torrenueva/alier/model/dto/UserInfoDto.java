@@ -7,6 +7,8 @@ public class UserInfoDto {
 
 	private int userId;
 	
+	private int referedrId;
+	
 	private String firstName;
 	
 	private String middleName;

@@ -17,12 +17,12 @@ public interface UserInfoAccountDao extends JpaRepository<UserEntity, Integer> {
 	@Query(value=GET_ALL_USERS)
 	public List<UserEntity> getAllUser() throws DataAccessException;
 	
-	final String GET_SPECIFIC_USER_BY_EMAIL = " SELECT e FROM UserEntity e WHERE e.email = :mail ";
+	final String GET_SPECIFIC_USER_BY_EMAIL = " SELECT e FROM UserEntity e WHERE e.email = :mail AND e.deleteFlag = false ";
 	
 	@Query(value=GET_SPECIFIC_USER_BY_EMAIL)
 	public UserEntity getSpecificUserByEmail(@Param(value = "mail") String mail) throws DataAccessException;
 	
-	final String DELETE_USER_BY_EMAIL = " DELETE FROM UserEntity e WHERE e.email = :mail ";
+	final String DELETE_USER_BY_EMAIL = " UPDATE UserEntity e SET e.deleteFlag = true WHERE e.email = :mail AND e.deleteFlag = false ";
 	
 	@Transactional
 	@Modifying

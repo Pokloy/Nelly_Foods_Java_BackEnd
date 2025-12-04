@@ -30,4 +30,9 @@ public class RecruitmentController {
 				.status(HttpStatus.OK)
 				.body(allrecruit);
 	}
+	
+//	@GetMapping
+//	public ResponseEntity<List<UserInfoDto>> getAllUsers(){
+//		List<UserInfoDto> allUsers = 
+//	}
 }

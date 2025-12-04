@@ -32,8 +32,10 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    return entityList.stream()
+	    		.filter(entity -> !entity.isDeleteFlag())
 	            .map(entity -> {
 	                UserInfoDto dto = new UserInfoDto();
+	                
 	                dto.setUserId(entity.getUserId());
 	                dto.setAddress(entity.getAddress());
 	                dto.setEmail(entity.getEmail());
@@ -104,10 +106,10 @@ public class UserServiceImpl implements UserService {
 	} 
 	
 	@Override
-	public String deleteUserByEmail(String email) {
-		UserEntity userEnt = userRepository.getSpecificUserByEmail(email);
+	public String deleteUserByEmail(UserInfoDto deletionDto) {
+		UserEntity userEnt = userRepository.getSpecificUserByEmail(deletionDto.getEmail());
 		if(userEnt != null) {
-			userRepository.deleteSpecificUserByEmail(email);
+			userRepository.deleteSpecificUserByEmail(deletionDto.getEmail());
 			StringBuilder sb1 = new StringBuilder();
 			sb1.append("User: ");
 			sb1.append(" ");

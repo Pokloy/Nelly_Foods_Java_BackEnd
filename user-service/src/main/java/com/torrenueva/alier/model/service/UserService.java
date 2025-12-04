@@ -8,5 +8,5 @@ public interface UserService {
 	public List<UserInfoDto> getAllUsers();
 	public String saveUser(UserInfoDto userDto);
 	public UserInfoDto findUserByEmail(String email);
-	public String deleteUserByEmail(String email);
+	public String deleteUserByEmail(UserInfoDto email);
 }

@@ -44,13 +44,12 @@ public class UserController {
 	            .body(result);
 	}
 	
-	@PostMapping("/find")
-	public ResponseEntity<UserInfoDto> findUser(
-			@RequestParam("email") String email){
-		UserInfoDto result = userService.findUserByEmail(email);
-		return ResponseEntity
-				.status(HttpStatus.OK)
-				.body(result);
+	@GetMapping("/find")
+	public ResponseEntity<UserInfoDto> findUser(@RequestParam(name="email") String email) {
+	    UserInfoDto result = userService.findUserByEmail(email);
+	    return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(result);
 	}
 	
 	@PutMapping("/update")
@@ -63,7 +62,7 @@ public class UserController {
 	
 	@DeleteMapping("/delete")
 	public ResponseEntity<String> deleteUser(
-			@RequestParam("email") String email) {
+			@RequestBody UserInfoDto email) {
 		String result = userService.deleteUserByEmail(email);
 		return ResponseEntity
 				.status(HttpStatus.ACCEPTED)

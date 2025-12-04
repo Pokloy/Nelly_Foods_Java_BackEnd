@@ -8,5 +8,5 @@ import com.torrenueva.alier.model.dto.UserInfoDto;
 public interface RecruitmentService {
 	public List<RecruitDto> getAllRecruitement();
 	public String saveRecruit(RecruitDto recruiteDto);
-	public UserInfoDto findUserByEmail(String email);
+	//public UserInfoDto findUserByEmail(String email);
 }

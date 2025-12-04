@@ -6,29 +6,34 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.sql.Timestamp;
 import lombok.Data;
 
 @Entity
-@Table(name = "tb_recruitment")
+@Table(name="tb_product")
 @Data
-public class RecruitmentEntity {
+public class ProductEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "referral_id")
-	private int referralId;
+	@Column(name = "product_id")
+	private int productId;
 	
-	@Column(name = "inviter_id")
-	private int inviterId;
+	@Column(name = "name")
+	private String name;
 	
-	@Column(name = "invited_id")
-	private int invitedId;
+	@Column(name = "photo")
+	private String[] photo;
 	
-	@Column(name = "status")
-	private String status;
+	@Column(name="price")
+	private int price;
 	
-	@Column(name = "update_date")
-	private Timestamp updateDate;
+	@Column(name="description")
+	private String description;
+	
+	@Column(name="specification")
+	private String specification;
+	
+	@Column(name="discount")
+	private String discount;
 	
 	@Column(name="delete_flag")
 	private boolean deleteFlag;

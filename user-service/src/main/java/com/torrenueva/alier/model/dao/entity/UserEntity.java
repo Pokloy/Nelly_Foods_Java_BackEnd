@@ -40,4 +40,7 @@ public class UserEntity {
 	
 	@Column(name="user_type")
 	private String userType;
+	
+	@Column(name="delete_flag")
+	private boolean deleteFlag;
 }
