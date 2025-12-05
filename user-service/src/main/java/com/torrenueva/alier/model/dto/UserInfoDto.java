@@ -27,4 +27,9 @@ public class UserInfoDto {
 	
 	private String refferEmail;
 
+	/*
+	 * 1 for save 
+	 * 2 for delete
+	 */
+	private int kafkaStatsTrigger;
 }

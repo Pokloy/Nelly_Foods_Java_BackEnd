@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 	        UserEntity refererUser = userRepository.getSpecificUserByEmail(userDto.getRefferEmail());
 	        userDto.setUserId(newUserId.getUserId());
 	        userDto.setReferedrId(refererUser.getUserId());
+	        userDto.setKafkaStatsTrigger(1);
 	        userEventProducerKafka.sendUserEvent(userDto);
 	        return msg;
 	    } catch (Exception e) {
@@ -108,6 +109,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String deleteUserByEmail(UserInfoDto deletionDto) {
 		UserEntity userEnt = userRepository.getSpecificUserByEmail(deletionDto.getEmail());
+		
+		deletionDto.setUserId(userEnt.getUserId());
+		deletionDto.setKafkaStatsTrigger(2);
+		userEventProducerKafka.sendUserEvent(deletionDto);
+		
 		if(userEnt != null) {
 			userRepository.deleteSpecificUserByEmail(deletionDto.getEmail());
 			StringBuilder sb1 = new StringBuilder();

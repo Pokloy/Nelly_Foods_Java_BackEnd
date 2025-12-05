@@ -34,10 +34,11 @@ public class UserEventConsumer {
 	    public void consumeUserEvent(UserInfoDto userInfoDto) {
     		logger.info("📦 Received User Event: {}", userInfoDto);
 	        System.out.println("Received recruitement Info : " + userInfoDto);
-	        
+	        String resulMsg = null;
 	        try {
+	        	System.out.println("Nakasulod sa try catch");
 	            if (userInfoDto.getUserId() == 0) {
-	                throw new IllegalArgumentException("Invalid order data!");
+	                throw new IllegalArgumentException("Invalid user data!");
 	            }
 	            
 	            // simulate transient failure (30 % chance)
@@ -45,6 +46,11 @@ public class UserEventConsumer {
 	                throw new RuntimeException("Simulated transient failure updating user");
 	            }
 	            
+	            if(userInfoDto.getKafkaStatsTrigger() == 2) {
+	            	System.out.println("Naka Sulod sa delete");
+		        	resulMsg = recruiteService.deleteRecruite(userInfoDto);
+		        	return;
+		        }
 	            
 		        LocalDateTime now = LocalDateTime.now();
 		        Timestamp timestamp = Timestamp.valueOf(now);
@@ -57,8 +63,10 @@ public class UserEventConsumer {
 		        recruiterDto.setStatus("Pending");
 		        recruiterDto.setUpdateDate(timestamp);
 		        
-		       String resulMsg = recruiteService.saveRecruit(recruiterDto);
-		       
+		        if(userInfoDto.getKafkaStatsTrigger() == 1) {
+	            	System.out.println("Naka Sulod sa save");
+		        	resulMsg = recruiteService.saveRecruit(recruiterDto);
+		        } 
 		       logger.info(resulMsg);
 		       
 		       System.out.println(resulMsg);
@@ -67,30 +75,6 @@ public class UserEventConsumer {
 	            throw e; // rethrow to trigger retry
 	        }
 	    }
-    	
-	
-//	@KafkaListener(topics = "user-events", groupId = "recruitment-group")
-//	public void consumeUserEvent(UserInfoDto userInfoDto) {
-//
-//	    System.out.println("Received: " + userInfoDto);
-//
-//	    // FAIL IMMEDIATELY for testing DLT
-//	    if (userInfoDto.getUserId() == 0) {
-//	        throw new RuntimeException("Forced exception for DLT test");
-//	    }
-//
-//	    // Normal processing (will not be executed during DLT test)
-//	    UserInfoDto referer = recruiteService.findUserByEmail(userInfoDto.getRefferEmail());
-//
-//	    RecruitDto recruiterDto = new RecruitDto();
-//	    recruiterDto.setInvitedId(userInfoDto.getUserId());
-//	    recruiterDto.setInviterId(referer.getUserId());
-//	    recruiterDto.setStatus("Pending");
-//	    recruiterDto.setUpdateDate(Timestamp.valueOf(LocalDateTime.now()));
-//
-//	    recruiteService.saveRecruit(recruiterDto);
-//	    System.out.println("Recruitment saved successfully");
-//	}
 
 	
 	

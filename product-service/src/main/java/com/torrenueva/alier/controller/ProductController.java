@@ -67,5 +67,4 @@ public class ProductController {
 				.status(HttpStatus.ACCEPTED)
 				.body(result);
 	}
-
 }

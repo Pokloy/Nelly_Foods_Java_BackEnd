@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.torrenueva.alier.model.dao.RecruitmentDao;
 import com.torrenueva.alier.model.dao.entity.RecruitmentEntity;
 import com.torrenueva.alier.model.dto.RecruitDto;
+import com.torrenueva.alier.model.dto.UserInfoDto;
 import com.torrenueva.alier.model.service.RecruitmentService;
 
 @Service
@@ -36,22 +37,6 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 	    .toList();
 	}
 	
-//	@Override
-//	public UserInfoDto findUserByEmail(String email) {
-//		UserInfoDto userDto = new UserInfoDto();
-//		UserEntity userEntity = userRepository.getSpecificUserByEmail(email);
-//		userDto.setUserId(userEntity.getUserId());
-//		userDto.setFirstName(userEntity.getFirstName());
-//		userDto.setMiddleName(userEntity.getMiddleName());
-//		userDto.setFamilyName(userEntity.getFamilyName());
-//		userDto.setEmail(userEntity.getEmail());
-//		userDto.setAddress(userEntity.getAddress());
-//		userDto.setPassword(userEntity.getPassword());
-//		userDto.setPhoneNumber(userEntity.getPhoneNumber());
-//		userDto.setUserType(userEntity.getUserType());				
-//		return userDto;
-//	}
-	
 	
 	@Override
 	public String saveRecruit(RecruitDto recruiteDto) {
@@ -67,6 +52,47 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 	        // Optionally log the exception
 	        e.printStackTrace();
 	        return "Failed to save user: " + e.getMessage();
+	    }
+	}
+	
+	@Override
+	public String deleteRecruite(UserInfoDto userInfoDto) {
+		
+		try {
+		 int result = recruitRepository.deleteSpecificRecruitByUserId(userInfoDto.getUserId());
+		 System.out.println(result);
+		 return "recruitment deleted";
+		} catch (Exception e) {
+        // Optionally log the exception
+        e.printStackTrace();
+        return "Failed to delete user: " + e.getMessage();
+    }
+	}
+	
+	@Override
+	public RecruitDto findSpecificRecruite(int invitedUserId) {
+		RecruitDto dto = new RecruitDto();
+		
+		try {
+			RecruitmentEntity findSpecificRecruit = recruitRepository.findSpecificRecruite(invitedUserId);
+			System.out.println("entity: " +  findSpecificRecruit);
+			if(findSpecificRecruit == null) {
+				System.out.println("Recruitment Not Found");
+				return dto;
+			}
+			
+			dto.setReferralId(findSpecificRecruit.getReferralId());
+			dto.setInvitedId(findSpecificRecruit.getInvitedId());
+			dto.setInviterId(findSpecificRecruit.getInviterId());
+			dto.setStatus(findSpecificRecruit.getStatus());
+			dto.setUpdateDate(findSpecificRecruit.getUpdateDate());
+			dto.setDeleteFlg(findSpecificRecruit.isDeleteFlag());
+			return dto;
+			
+		} catch (Exception e) {
+	        // Optionally log the exception
+	        e.printStackTrace();
+	        return dto;
 	    }
 	}
 }

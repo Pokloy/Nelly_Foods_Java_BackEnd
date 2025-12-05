@@ -15,4 +15,6 @@ public class RecruitDto {
 	private String status;
 	
 	private Timestamp updateDate;
+	
+	private boolean deleteFlg;
 }
