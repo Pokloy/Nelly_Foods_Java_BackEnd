@@ -10,4 +10,5 @@ public interface RecruitmentService {
 	public String saveRecruit(RecruitDto recruiteDto);
 	public String deleteRecruite(UserInfoDto userInfoDto);
 	public RecruitDto findSpecificRecruite(int invitedUserId);
+	public String updateStatusByInvitedId(int invitedUserId, String status);
 }

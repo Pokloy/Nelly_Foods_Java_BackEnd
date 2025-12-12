@@ -26,9 +26,9 @@ public class ProductServiceImpl implements ProductService {
 	        ProductEntity newProduct = new ProductEntity();
 	        if(specificProduct != null) {
 	        	newProduct.setProductId(newProduct.getProductId());
-	        	msg = "User updated successfully";
+	        	msg = "Product updated successfully";
 	        } else {
-	        	msg = "User has been saved successfully";
+	        	msg = "Product has been saved successfully";
 	        }
 	        newProduct.setName(productDto.getName());
 	        newProduct.setPhoto(productDto.getPhoto());

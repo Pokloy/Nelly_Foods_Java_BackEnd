@@ -28,4 +28,11 @@ public interface RecruitmentDao extends JpaRepository<RecruitmentEntity, Integer
 	
 	@Query(value = GET_SPECIFIC_RECRUITMENT)
 	public RecruitmentEntity findSpecificRecruite(@Param(value = "invitedUserId") int invitedUserId) throws DataAccessException;
+	
+	final String UPDATE_SPECIFIC_RECRUITMENT_STATUS = " UPDATE RecruitmentEntity e SET e.status = :status WHERE e.invitedId = :invitedId ";
+	
+	@Transactional
+	@Modifying
+	@Query(value=UPDATE_SPECIFIC_RECRUITMENT_STATUS)
+	public int updateStatus(@Param(value = "invitedId") int invitedUserId, @Param(value = "status") String status) throws DataAccessException;
 }

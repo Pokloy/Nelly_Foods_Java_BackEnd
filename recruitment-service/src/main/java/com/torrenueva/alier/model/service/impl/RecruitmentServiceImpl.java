@@ -95,4 +95,18 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 	        return dto;
 	    }
 	}
+	
+	@Override
+	public String updateStatusByInvitedId(int invitedUserId, String status) {
+		RecruitmentEntity findSpecificRecruit = recruitRepository.findSpecificRecruite(invitedUserId);
+		RecruitmentEntity updatedRecruit = new RecruitmentEntity();
+		
+		updatedRecruit.setReferralId(findSpecificRecruit.getReferralId());
+		updatedRecruit.setInviterId(findSpecificRecruit.getInviterId());
+		updatedRecruit.setInvitedId(findSpecificRecruit.getInvitedId());
+		updatedRecruit.setStatus(status);
+		updatedRecruit.setDeleteFlag(false);
+		updatedRecruit.setUpdateDate(findSpecificRecruit.getUpdateDate());
+		return "User Status Updated Successfully";
+	} 
 }

@@ -60,11 +60,11 @@ public class ProductController {
 				.body(result);
 	}
 	
-	@GetMapping("/find")
+	@PostMapping("/find")
 	public ResponseEntity<ProductDto> findProduct(@RequestBody ProductDto prodDto){
 		ProductDto result = productServ.getSpecificProductByName(prodDto);
 		return ResponseEntity
-				.status(HttpStatus.ACCEPTED)
+				.status(HttpStatus.OK)
 				.body(result);
 	}
 }
