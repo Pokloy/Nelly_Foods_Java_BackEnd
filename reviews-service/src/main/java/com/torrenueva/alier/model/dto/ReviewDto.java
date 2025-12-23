@@ -18,7 +18,7 @@ public class ReviewDto {
 	
 	private String[] photo;
 	
-	private int deleteflg;
+	private boolean deleteflg;
 	
 	private String email;
 	

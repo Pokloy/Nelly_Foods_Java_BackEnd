@@ -1,5 +1,8 @@
 package com.torrenueva.alier.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torrenueva.alier.model.client.ProductServiceClient;
+import com.torrenueva.alier.model.dao.ReviewDao;
+import com.torrenueva.alier.model.dao.entity.ReviewsEntity;
+import com.torrenueva.alier.model.dto.ProductDto;
 import com.torrenueva.alier.model.dto.ReviewDto;
 import com.torrenueva.alier.model.service.ReviewService;
 
@@ -29,7 +35,21 @@ public class ReviewsController {
 	}
 	
 	@GetMapping
-	public Respons
+	public ResponseEntity<List<ReviewDto>> getAllReview(){
+		List<ReviewDto> dto = reviewService.getAllReview();
+		
+	    return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(dto);		
+	}
+	
+	@GetMapping("/find")
+	public ResponseEntity<ReviewDto> findProduct(@RequestBody ReviewDto reviewDto){
+		ReviewDto result = reviewService.getSpecificReviewByProd(reviewDto.getProductName());
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(result);
+	}
 	
 	@PostMapping
 	public ResponseEntity<String> saveReview(@RequestBody ReviewDto reviewDto) {

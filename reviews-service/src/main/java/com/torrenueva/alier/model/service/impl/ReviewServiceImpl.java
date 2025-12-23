@@ -1,5 +1,9 @@
 package com.torrenueva.alier.model.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +47,64 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewRepository.saveAndFlush(reviewEntity);
 		
 		return "Saved Review";
+	}
+	
+	@Override
+	public List<ReviewDto> getAllReview(){
+		List<ReviewsEntity> result = reviewRepository.getAllReview();
+		
+		if(result == null) {
+			return new ArrayList<>();
+		}
+		
+		return result.stream()
+				.map(entity -> {
+					ReviewDto dto = new ReviewDto();
+					dto.setReviewId(entity.getReviewId());
+					dto.setProdId(entity.getProdId());
+					dto.setUserId(entity.getUserId());
+					dto.setStar(entity.getStar());
+					dto.setTitle(entity.getTitle());
+					dto.setReview(entity.getReview());
+					dto.setPhoto(entity.getPhoto());
+					dto.setDeleteflg(entity.isDeleteflg());					
+					return dto;
+				}).toList();
+		
+	}
+	
+	@Override
+	public ReviewDto getSpecificReviewByProd(String prodName) {
+		try {
+		ProductDto productDto = productServiceClient.getProductByName(prodName);
+		
+        if (productDto == null) {
+            throw new NoSuchElementException("Product '" + productDto + "' not found.");
+        }
+		
+		ReviewsEntity result = reviewRepository.getSpecificReviewByProd(productDto.getProductId());
+		
+        if (result == null) {
+            throw new NoSuchElementException("Review '" + result + "' not found.");
+        }
+		
+		ReviewDto dto = new ReviewDto();
+		dto.setReviewId(result.getReviewId());
+		dto.setProdId(result.getProdId());
+		dto.setUserId(result.getUserId());
+		dto.setStar(result.getStar());
+		dto.setTitle(result.getTitle());
+		dto.setReview(result.getReview());
+		dto.setPhoto(result.getPhoto());
+		dto.setDeleteflg(result.isDeleteflg());
+		return dto;
+		
+	    } catch (NoSuchElementException ex) {
+	        System.err.println(ex.getMessage()); // Replace with logger in production
+	        return null; // or return an empty DTO if you prefer
+	    } catch (Exception ex) {
+	        ex.printStackTrace(); // Log unexpected errors
+	        return null;
+	    }
 	}
 }
