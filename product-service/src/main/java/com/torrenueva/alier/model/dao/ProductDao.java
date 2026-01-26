@@ -28,4 +28,9 @@ public interface ProductDao extends JpaRepository<ProductEntity, Integer> {
 	
 	@Query(value=GET_SPECIFIC_PRODUCT_BY_NAME)
 	public ProductEntity getSpecificProductByName(@Param(value = "name") String name) throws DataAccessException;
+	
+	final String GET_SPECIFIC_PRODUCT_BY_ID = " SELECT e FROM ProductEntity e WHERE e.productId = :id ";
+	
+	@Query(value=GET_SPECIFIC_PRODUCT_BY_ID)
+	public ProductEntity getSpecificProductById(@Param(value = "id") int id) throws DataAccessException;
 }

@@ -59,7 +59,7 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - C:/prometheus-3.5.0.windows-amd64/prometheus.yml:/etc/prometheus/prometheus.yml
+      - "C:/Users/tetsu/OneDrive/Desktop/FIles on laptop/Web_Projects/Nelly Food Products BackEnd/Nelly_Foods_Java_BackEnd/prometheus.yml:/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
     command:

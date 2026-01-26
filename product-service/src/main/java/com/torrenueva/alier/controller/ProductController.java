@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.torrenueva.alier.model.dto.ProductDto;
@@ -21,6 +22,11 @@ import com.torrenueva.alier.model.service.ProductService;
 public class ProductController {
 	@Autowired
 	private ProductService productServ;
+	
+	@GetMapping("/hello")
+	public String hello() {
+	    return "Hello Product Service!";
+	}
 	
 	@GetMapping("/test")
 	public String test() {
@@ -66,5 +72,11 @@ public class ProductController {
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(result);
+	}
+	
+	@GetMapping("/findById")
+	public ResponseEntity<ProductDto> findProductbyId(@RequestParam int id) {
+	    ProductDto result = productServ.getSpecificProductById(id);
+	    return ResponseEntity.ok(result);
 	}
 }

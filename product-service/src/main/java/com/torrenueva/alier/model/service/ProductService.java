@@ -9,4 +9,5 @@ public interface ProductService {
 	public String deleteProduct(ProductDto productName);
 	public List<ProductDto> getAllProduct();
 	public ProductDto getSpecificProductByName(ProductDto productName);
+	public ProductDto getSpecificProductById(int id);
 }

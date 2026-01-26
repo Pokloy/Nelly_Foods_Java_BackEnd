@@ -122,5 +122,20 @@ public class ProductServiceImpl implements ProductService {
 	    }
 	}
 
-
+	@Override
+	public ProductDto getSpecificProductById(int id) {
+		ProductEntity specificProduct = productRepository.getSpecificProductById(id);
+		ProductDto result = new ProductDto();
+        if (specificProduct == null) {
+            throw new NoSuchElementException("Product '" + id + "' not found.");
+        }
+		result.setProductId(specificProduct.getProductId());
+		result.setName(specificProduct.getName());
+		result.setDesc(specificProduct.getDescription());	
+		result.setPhoto(specificProduct.getPhoto());
+		result.setPrice(specificProduct.getPrice());
+		result.setSpecification(specificProduct.getSpecification());
+		result.setDiscount(specificProduct.getDiscount());
+		return result;
+	}
 }

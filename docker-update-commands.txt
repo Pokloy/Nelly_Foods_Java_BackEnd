@@ -1,0 +1,33 @@
+CASE 1: You changed Java code (most common)
+docker compose down
+docker compose build
+docker compose up
+
+CASE 2: You changed the Dockerfile
+docker compose down
+docker compose build
+docker compose up
+
+
+CASE 3: You changed docker-compose.yml
+A) Only env vars / ports / depends_on:
+docker compose down
+docker compose up
+
+B) You changed build: context or image reference:
+docker compose build
+docker compose up
+
+
+CASE 4: You changed application.yml / application-docker.yml
+docker compose build
+docker compose up
+
+
+CASE 5: Things are acting weird (cache issues)
+docker compose down -v
+docker compose build --no-cache
+docker compose up
+
+
+

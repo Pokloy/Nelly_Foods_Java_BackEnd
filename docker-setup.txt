@@ -1,0 +1,24 @@
+step 1:
+open git bash with the current directory. 
+
+
+step 2 - check application if it has the same folder structure: 
+root/
+├── docker-compose.yml
+├── discovery-service/
+│   └── Dockerfile
+├── api-gateway/
+│   └── Dockerfile
+├── user-service/
+│   └── Dockerfile
+├── recruitment-service/
+│   └── Dockerfile
+
+
+step 3 - if its has the folder structure let build docker images using the docker file in each service: 
+type "docker compose build" on the current git bash.
+
+
+step 4 - Now since we already have images let create container for the images and run: 
+type "docker compose up" on the current git bash.
+

@@ -1,0 +1,106 @@
+Manual Setup of Spring Boot Metrics Dashboard in Grafana
+
+
+1️⃣ Access Grafana
+
+Open your browser and go to: http://localhost:3000
+
+Login with your Grafana credentials (admin/admin by default).
+
+
+
+2️⃣ Add Prometheus as a Data Source
+
+On the left sidebar, click the gear icon → Data Sources.
+
+Click Add data source → Prometheus.
+
+Set the URL depending on your setup:
+
+Prometheus on host: http://localhost:9090
+
+Prometheus inside Docker but scraping host: http://host.docker.internal:9090
+
+Click Save & Test → should show Data source is working ✅
+
+
+
+3️⃣ Create a New Dashboard (Manual version of 4701)
+
+Instead of importing, you can create the panels manually that the dashboard would give:
+
+a) Create Dashboard
+
+Left sidebar → + → Dashboard → New Dashboard
+
+b) Add Panel 1: JVM Memory Usage
+
+Click Add a new panel
+
+Data source: Prometheus
+
+Query:
+
+jvm_memory_used_bytes{area="heap"}
+
+Visualization: Graph or Time series
+
+Panel title: JVM Heap Memory Used
+
+
+c) Add Panel 2: JVM Garbage Collection
+
+Add new panel
+
+Query:
+
+jvm_gc_pause_seconds_sum
+
+Visualization: Graph
+
+Title: GC Pause Time (seconds)
+
+d) Add Panel 3: HTTP Requests
+
+Query:
+
+http_server_requests_seconds_count
+
+Visualization: Graph or Stat
+
+Title: HTTP Request Count
+
+e) Add Panel 4: Thread Count
+
+Query:
+
+jvm_threads_live_threads
+
+Visualization: Stat or Gauge
+
+Title: Live Threads
+
+4️⃣ Repeat Panels for Metrics You Need
+
+Common metrics for Spring Boot / Actuator:
+
+JVM memory (jvm_memory_used_bytes)
+
+Threads (jvm_threads_live_threads)
+
+Garbage collection (jvm_gc_pause_seconds_sum)
+
+HTTP requests (http_server_requests_seconds_count)
+
+5️⃣ Adjust Dashboard Layout
+
+Resize and position panels as desired.
+
+Save the dashboard: Dashboard → Save → Give it a name like Spring Boot Metrics
+
+
+✅ You now have a manual version of dashboard 4701, fully connected to your local Prometheus metrics.
+
+Advantage: You can customize it exactly how you want.
+
+Bonus: You don’t rely on Grafana.com imports — useful for offline setups.
