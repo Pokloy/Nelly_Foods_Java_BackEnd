@@ -30,4 +30,9 @@ public interface UserInfoAccountDao extends JpaRepository<UserEntity, Integer> {
 	public int deleteSpecificUserByEmail(@Param(value = "mail") String mail) throws DataAccessException;
 	
 	boolean existsByEmail(String email);
+	
+	final String GET_SPECIFIC_USER_BY_ID = "SELECT e FROM UserEntity e WHERE e.userId = :userId";
+	
+	@Query(value=GET_SPECIFIC_USER_BY_ID)
+	public UserEntity getSpecificUserById(@Param(value = "userId") int userId) throws DataAccessException;
 }

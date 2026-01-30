@@ -68,4 +68,12 @@ public class UserController {
 				.status(HttpStatus.ACCEPTED)
 				.body(result);
 	}
+	
+	@GetMapping("/findById")
+	public ResponseEntity<UserInfoDto> findUserById(@RequestParam(name="id") int id) {
+	    UserInfoDto result = userService.findUserById(id);
+	    return ResponseEntity
+	            .status(HttpStatus.OK)
+	            .body(result);
+	}
 }

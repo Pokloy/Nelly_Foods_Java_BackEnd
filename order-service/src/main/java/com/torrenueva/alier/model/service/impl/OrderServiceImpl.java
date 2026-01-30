@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.torrenueva.alier.model.client.ProductServiceClient;
+import com.torrenueva.alier.model.client.UserServiceClient;
 import com.torrenueva.alier.model.dao.OrderDao;
 import com.torrenueva.alier.model.dao.entity.OrderEntity;
 import com.torrenueva.alier.model.dto.OrderDto;
 import com.torrenueva.alier.model.service.OrderService;
 import com.torrenueva.alier.model.dto.ProductDto;
+import com.torrenueva.alier.model.dto.UserDto;
 import com.torrenueva.alier.model.dto.object.ItemObject;
 
 @Service
@@ -26,6 +28,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Autowired
 	private ProductServiceClient productServiceClient;
+	
+	@Autowired
+	private UserServiceClient userServiceClient;
 	
 	@Autowired
     private ObjectMapper objectMapper;
@@ -63,15 +68,24 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 4. Populate other Entity fields
-        entity.setUserId(orderDto.getUserId());
-        entity.setTotalPrice(grandTotal);
-        entity.setStatus("Pending");
-        entity.setDateOrder(now);
-        entity.setUpdateDate(now);
-        entity.setDeleteFlag(false);
 
-        orderRepository.saveAndFlush(entity);
-        return "Order created successfully for User: " + orderDto.getUserId();
+        UserDto userDto = userServiceClient.getUserById(orderDto.getUserId());
+        
+        if(userDto.getFirstName() == null) {
+        	return "No User found with Id: " + + orderDto.getUserId();
+        } else if(userDto.getFirstName().equals("No Data")) {
+        	return "No User found with Id: " + + orderDto.getUserId();
+        } else {
+            entity.setUserId(orderDto.getUserId());
+            entity.setTotalPrice(grandTotal);
+            entity.setStatus("Pending");
+            entity.setDateOrder(now);
+            entity.setUpdateDate(now);
+            entity.setDeleteFlag(false);
+
+            orderRepository.saveAndFlush(entity);
+            return "Order created successfully for User: " + orderDto.getUserId();
+        }
     }
 	
 	@Override

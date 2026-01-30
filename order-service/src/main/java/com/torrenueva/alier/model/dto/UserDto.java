@@ -3,11 +3,8 @@ package com.torrenueva.alier.model.dto;
 import lombok.Data;
 
 @Data
-public class UserInfoDto {
-
+public class UserDto {
 	private int userId;
-	
-	private int referedrId;
 	
 	private String firstName;
 	
@@ -25,15 +22,7 @@ public class UserInfoDto {
 	
 	private String userType;
 	
-	private String refferEmail;
-	
-	private boolean deleteFlg;
-
-	/*
-	 * 1 for save 
-	 * 2 for delete
-	 */
-	private int kafkaStatsTrigger;
-	
 	private String resultMessage;
+	
+	private boolean deleteFlag;
 }

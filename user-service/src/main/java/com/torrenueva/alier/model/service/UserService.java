@@ -9,4 +9,5 @@ public interface UserService {
 	public String saveUser(UserInfoDto userDto);
 	public UserInfoDto findUserByEmail(String email);
 	public String deleteUserByEmail(UserInfoDto email);
+	public UserInfoDto findUserById(int id);
 }

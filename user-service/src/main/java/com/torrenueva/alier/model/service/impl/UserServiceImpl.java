@@ -136,6 +136,25 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
-	
+	public UserInfoDto findUserById(int id) {
+		UserEntity userEnt = userRepository.getSpecificUserById(id);
+		UserInfoDto result = new UserInfoDto();
+		if(userEnt == null) {
+			result.setResultMessage("No user found");
+			return result;
+		} else {
+			result.setUserId(userEnt.getUserId());
+			result.setFirstName(userEnt.getFirstName());
+			result.setMiddleName(userEnt.getMiddleName());
+			result.setFamilyName(userEnt.getFamilyName());
+			result.setEmail(userEnt.getEmail());
+			result.setPhoneNumber(userEnt.getPhoneNumber());
+			result.setAddress(userEnt.getAddress());
+			result.setPassword(userEnt.getPassword());
+			result.setUserType(userEnt.getUserType());
+			result.setDeleteFlg(userEnt.isDeleteFlag());
+			return result;
+		}
+	}
 	
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.torrenueva.alier.model.client.UserServiceClient;
 import com.torrenueva.alier.model.dto.OrderDto;
+import com.torrenueva.alier.model.dto.UserDto;
 import com.torrenueva.alier.model.service.OrderService;
 
 @RestController
@@ -22,6 +24,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderServ;
+	
+	@Autowired
+	private UserServiceClient test;
 	
 	@GetMapping
 	public ResponseEntity<List<OrderDto>> getAllProduct(){
