@@ -36,7 +36,7 @@ public class UserController {
 				.body(getAllUser);
 	}
 	
-	@PostMapping
+	@PostMapping("/register")
 	public ResponseEntity<String> savedUser(@RequestBody UserInfoDto userDto) {
 	    String result = userService.saveUser(userDto);
 	    return ResponseEntity
