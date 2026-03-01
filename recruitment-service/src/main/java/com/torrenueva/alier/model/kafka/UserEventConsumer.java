@@ -71,7 +71,7 @@ public class UserEventConsumer {
 		       
 		       System.out.println(resulMsg);
 	        } catch (Exception e) {
-	            logger.error("❌ Error processing order event: {}", e.getMessage());
+	            logger.error("❌ Error processing recruiter event: {}", e.getMessage());
 	            throw e; // rethrow to trigger retry
 	        }
 	    }

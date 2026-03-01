@@ -27,6 +27,7 @@ public class ProductServiceClient {
 						.path("/products/findById")
 						.queryParam("id", id)
 						.build())
+				.header("X-Gateway-Secret", "AlierInternalOnly123") 
 				.retrieve()
 				.bodyToMono(ProductDto.class)
 				.block();
@@ -36,8 +37,9 @@ public class ProductServiceClient {
 	* Fallback method if product-service is down or failing.
 	*/
 	public ProductDto fallbackGetProductByName(int id, Throwable throwable) {
+		System.out.println("Error Message: " + throwable);
 		ProductDto fallback = new ProductDto();
-		fallback.setProductId(-1);
+		fallback.setProductId(0);
 		fallback.setName("Unknown Product");
 		fallback.setDesc("Product service is currently unavailable.");
 		fallback.setPrice(0);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.Authentication;
 
-import com.torrenueva.alier.common.JwtUtils;
+import com.torrenueva.alier.common.Jwt.JwtUtils;
 import com.torrenueva.alier.model.dto.LoginDto;
 
 @RestController

@@ -17,8 +17,8 @@ public class GatewayHeaderFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, java.io.IOException {
-        
-        String secret = request.getHeader("X-Gateway-Secret");
+
+    	String secret = request.getHeader("X-Gateway-Secret");
 
         // Inside User Service: GatewayHeaderFilter.java
         if ("AlierInternalOnly123".equals(secret)) {

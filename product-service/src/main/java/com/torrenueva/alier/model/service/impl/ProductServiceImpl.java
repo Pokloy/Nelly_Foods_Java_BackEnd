@@ -94,9 +94,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public ProductDto getSpecificProductByName(ProductDto productName) {
+	public ProductDto getSpecificProductByName(String productName) {
 	    try {
-	        ProductEntity specificProduct = productRepository.getSpecificProductByName(productName.getName());
+	        ProductEntity specificProduct = productRepository.getSpecificProductByName(productName);
 
 	        if (specificProduct == null) {
 	            throw new NoSuchElementException("Product '" + productName + "' not found.");

@@ -35,58 +35,112 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
     private ObjectMapper objectMapper;
 	
-	@Override
-    public String addOrder(OrderDto orderDto) {
-        LocalDateTime now = LocalDateTime.now();
-        OrderEntity entity = new OrderEntity();
+//	@Override
+//    public String addOrder(OrderDto orderDto) {
+//        LocalDateTime now = LocalDateTime.now();
+//        OrderEntity entity = new OrderEntity();
+//
+//        // 1. Fetch data from Product-Service & Calculate Subtotals
+//        List<ItemObject> processedItems = orderDto.getItems().stream()
+//            .map(item -> {
+//                ProductDto product = productServiceClient.getProductById(item.getProductId());              
+//                
+//                // Calculate Subtotal: Price * Quantity
+//                BigDecimal price = BigDecimal.valueOf(product.getPrice());
+//                BigDecimal subTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));
+//                
+//                item.setSubTotal(subTotal);
+//                return item;
+//            })
+//            .collect(Collectors.toList());
+//
+//        // 2. Calculate Total Price
+//        BigDecimal grandTotal = processedItems.stream()
+//            .map(ItemObject::getSubTotal)
+//            .reduce(BigDecimal.ZERO, BigDecimal::add);
+//
+//        // 3. Convert the List to JSON String for the JSONB column
+//        try {
+//            String itemsJson = objectMapper.writeValueAsString(processedItems);
+//            entity.setItems(itemsJson);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Failed to convert items to JSON", e);
+//        }
+//
+//        // 4. Populate other Entity fields
+//
+//        UserDto userDto = userServiceClient.getUserById(orderDto.getUserId());
+//        
+//        if(userDto.getFirstName() == null) {
+//        	return "No User found with Id: " + + orderDto.getUserId();
+//        } else if(userDto.getFirstName().equals("No Data")) {
+//        	return "No User found with Id: " + + orderDto.getUserId();
+//        } else {
+//            entity.setUserId(orderDto.getUserId());
+//            entity.setTotalPrice(grandTotal);
+//            entity.setStatus("Pending");
+//            entity.setDateOrder(now);
+//            entity.setUpdateDate(now);
+//            entity.setDeleteFlag(false);
+//
+//            orderRepository.saveAndFlush(entity);
+//            return "Order created successfully for User: " + orderDto.getUserId();
+//        }
+//    }
+	
+	public String addOrder(OrderDto orderDto) {
+	    LocalDateTime now = LocalDateTime.now();
+	    OrderEntity entity = new OrderEntity();
 
-        // 1. Fetch data from Product-Service & Calculate Subtotals
-        List<ItemObject> processedItems = orderDto.getItems().stream()
-            .map(item -> {
-                ProductDto product = productServiceClient.getProductById(item.getProductId());
-                
-                // Calculate Subtotal: Price * Quantity
-                BigDecimal price = BigDecimal.valueOf(product.getPrice());
-                BigDecimal subTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));
-                
-                item.setSubTotal(subTotal);
-                return item;
-            })
-            .collect(Collectors.toList());
+	    // 1. Fetch data & Calculate Subtotals
+	    List<ItemObject> processedItems = new ArrayList<>();
+	    
+	    for (ItemObject item : orderDto.getItems()) {
+	        ProductDto product = productServiceClient.getProductById(item.getProductId());
+	        
+	        // Corrected Grammar: "No product found" is more natural than "No product is found"
+	        if (product == null || product.getProductId() == 0) {
+	            return "No product found for ID: " + item.getProductId();
+	        }                
+	        
+	        BigDecimal price = BigDecimal.valueOf(product.getPrice());
+	        BigDecimal subTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));
+	        
+	        item.setSubTotal(subTotal);
+	        processedItems.add(item);
+	    }
 
-        // 2. Calculate Total Price
-        BigDecimal grandTotal = processedItems.stream()
-            .map(ItemObject::getSubTotal)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+	    // 2. Calculate Total Price
+	    BigDecimal grandTotal = processedItems.stream()
+	        .map(ItemObject::getSubTotal)
+	        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 3. Convert the List to JSON String for the JSONB column
-        try {
-            String itemsJson = objectMapper.writeValueAsString(processedItems);
-            entity.setItems(itemsJson);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to convert items to JSON", e);
-        }
+	    // 3. Convert to JSON
+	    try {
+	        String itemsJson = objectMapper.writeValueAsString(processedItems);
+	        entity.setItems(itemsJson);
+	    } catch (Exception e) {
+	        throw new RuntimeException("Failed to convert items to JSON", e);
+	    }
 
-        // 4. Populate other Entity fields
+	    // 4. User Validation
+	    UserDto userDto = userServiceClient.getUserById(orderDto.getUserId());
+	    
+	    // Improved grammar and combined logic
+	    if (userDto == null || userDto.getFirstName() == null || "No Data".equals(userDto.getFirstName())) {
+	        return "No user found with ID: " + orderDto.getUserId();
+	    } 
 
-        UserDto userDto = userServiceClient.getUserById(orderDto.getUserId());
-        
-        if(userDto.getFirstName() == null) {
-        	return "No User found with Id: " + + orderDto.getUserId();
-        } else if(userDto.getFirstName().equals("No Data")) {
-        	return "No User found with Id: " + + orderDto.getUserId();
-        } else {
-            entity.setUserId(orderDto.getUserId());
-            entity.setTotalPrice(grandTotal);
-            entity.setStatus("Pending");
-            entity.setDateOrder(now);
-            entity.setUpdateDate(now);
-            entity.setDeleteFlag(false);
+	    entity.setUserId(orderDto.getUserId());
+	    entity.setTotalPrice(grandTotal);
+	    entity.setStatus("Pending");
+	    entity.setDateOrder(now);
+	    entity.setUpdateDate(now);
+	    entity.setDeleteFlag(false);
 
-            orderRepository.saveAndFlush(entity);
-            return "Order created successfully for User: " + orderDto.getUserId();
-        }
-    }
+	    orderRepository.saveAndFlush(entity);
+	    return "Order created successfully for User ID: " + orderDto.getUserId();
+	}
 	
 	@Override
 	public List<OrderDto> getAllorder() {

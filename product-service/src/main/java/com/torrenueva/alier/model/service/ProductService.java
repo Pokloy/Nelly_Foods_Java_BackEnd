@@ -8,6 +8,6 @@ public interface ProductService {
 	public String saveProduct(ProductDto productDto);
 	public String deleteProduct(ProductDto productName);
 	public List<ProductDto> getAllProduct();
-	public ProductDto getSpecificProductByName(ProductDto productName);
+	public ProductDto getSpecificProductByName(String productName);
 	public ProductDto getSpecificProductById(int id);
 }

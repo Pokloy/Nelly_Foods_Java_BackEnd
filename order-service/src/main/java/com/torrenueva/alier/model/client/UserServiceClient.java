@@ -28,6 +28,7 @@ public class UserServiceClient {
 						.path("/users/findById")
 						.queryParam("id", id)
 						.build())
+				.header("X-Gateway-Secret", "AlierInternalOnly123")
 				.retrieve()
 				.bodyToMono(UserDto.class)
 				.block();

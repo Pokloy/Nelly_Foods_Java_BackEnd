@@ -1,4 +1,4 @@
-package com.torrenueva.alier.common;
+package com.torrenueva.alier.common.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

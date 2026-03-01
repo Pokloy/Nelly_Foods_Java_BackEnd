@@ -22,16 +22,13 @@ public class ProductEventConsumer {
 	  @KafkaListener(
 			  topics = "product-events", 
 			  groupId = "product-group")
-	    public ProductDto consumeUserEvent(ProductDto productDto) {
-    		logger.info("📦 Received product Event: {}", productDto);
-	        System.out.println("Received product Info : " + productDto);
+	    public ProductDto consumeUserEvent(String productName) {
+    		logger.info("📦 Received product Event: {}", productName);
+	        System.out.println("Received product Info : " + productName);
 	        try {
 	        	System.out.println("Nakasulod sa try catch");
-	            if (productDto.getProductId() == 0) {
-	                throw new IllegalArgumentException("Invalid product data!");
-	            }
 	            
-		        ProductDto product = prodService.getSpecificProductByName(productDto);
+		        ProductDto product = prodService.getSpecificProductByName(productName);
 		        
 		        if(product == null) {
 	            	System.out.println("no product");

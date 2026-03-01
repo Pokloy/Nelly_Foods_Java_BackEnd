@@ -66,9 +66,9 @@ public class ProductController {
 				.body(result);
 	}
 	
-	@PostMapping("/find")
-	public ResponseEntity<ProductDto> findProduct(@RequestBody ProductDto prodDto){
-		ProductDto result = productServ.getSpecificProductByName(prodDto);
+	@GetMapping("/find")
+	public ResponseEntity<ProductDto> findProduct(@RequestParam(name="name") String name){
+		ProductDto result = productServ.getSpecificProductByName(name);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(result);

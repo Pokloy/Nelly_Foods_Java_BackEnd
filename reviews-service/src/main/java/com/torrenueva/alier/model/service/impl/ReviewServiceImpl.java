@@ -32,6 +32,10 @@ public class ReviewServiceImpl implements ReviewService {
 	public String saveReview(ReviewDto reviewDto) {
 		ProductDto productDto = productServiceClient.getProductByName(reviewDto.getProductName());
 		
+		if(productDto.getProductId() == 0) {
+			return "No Such Product Found";
+		}
+		
 		UserInfoDto userInfoDto = userServiceClient.getUserByEmail(reviewDto.getEmail());
 		
 		ReviewsEntity reviewEntity = new ReviewsEntity();

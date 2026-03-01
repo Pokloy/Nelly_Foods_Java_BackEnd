@@ -1,4 +1,4 @@
-package com.torrenueva.alier.common;
+package com.torrenueva.alier.common.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

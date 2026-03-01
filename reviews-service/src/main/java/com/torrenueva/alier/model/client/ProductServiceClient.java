@@ -12,23 +12,25 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 public class ProductServiceClient {
 
     private final WebClient webClient;
-
-    public ProductServiceClient(WebClient.Builder webClientBuilder,
-                                @Value("${product-service.base-url}") String baseUrl) {
-        this.webClient = webClientBuilder.baseUrl(baseUrl).build();
-    }
+    
+    public ProductServiceClient(WebClient.Builder webClientBuilder, // Injects the clean builder
+            @Value("${product-service.base-url}") String baseUrl) {
+		// This creates a dedicated WebClient just for this service!
+		this.webClient = webClientBuilder.baseUrl(baseUrl).build(); 
+	}
 
     /**
      * Calls the product-service to get a product by name.
      */
     @CircuitBreaker(name = "productServiceCB", fallbackMethod = "fallbackGetProductByName")
     public ProductDto getProductByName(String name) {
-        ProductDto requestDto = new ProductDto();
-        requestDto.setName(name);
-
-        return webClient.post()
-                .uri("/products/find") // matches product-service controller
-                .bodyValue(requestDto)
+        
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/products/find")
+                        .queryParam("name", name)
+                        .build())
+                .header("X-Gateway-Secret", "AlierInternalOnly123") 
                 .retrieve()
                 .bodyToMono(ProductDto.class)
                 .block();
@@ -38,8 +40,9 @@ public class ProductServiceClient {
      * Fallback method if product-service is down or failing.
      */
     public ProductDto fallbackGetProductByName(String name, Throwable throwable) {
-        ProductDto fallback = new ProductDto();
-        fallback.setProductId(-1);
+    	System.out.println("Error Message: " + throwable);
+    	ProductDto fallback = new ProductDto();
+        fallback.setProductId(0);
         fallback.setName("Unknown Product");
         fallback.setDesc("Product service is currently unavailable.");
         fallback.setPrice(0);

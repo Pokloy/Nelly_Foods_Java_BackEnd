@@ -28,7 +28,8 @@ public class DataInitializer implements CommandLineRunner {
             admin.setEmail(adminEmail);
             admin.setPhoneNumber("09123456789");
             admin.setAddress("Headquarters");
-            admin.setPassword("$2a$12$JuSOEvoAqrHKNUIlZmI9CegYwIIPY6d9YO07fEm/gaYR2VXPbU/Iy"); // in real apps, hash this!
+            // password: password123
+            admin.setPassword("$2a$12$xYzRT0dsWwTOhtk0FNwtE.0.ujxMzThUCVA3oYI/RikFDSVfJ8vue"); // in real apps, hash this!
             admin.setUserType("ADMIN");
             admin.setDeleteFlag(false);
 

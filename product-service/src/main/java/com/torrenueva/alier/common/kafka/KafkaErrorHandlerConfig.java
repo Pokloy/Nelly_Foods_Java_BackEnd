@@ -1,4 +1,4 @@
-package com.torrenueva.alier.model.common;
+package com.torrenueva.alier.common.kafka;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

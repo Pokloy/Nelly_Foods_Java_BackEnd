@@ -25,6 +25,7 @@ public class UserServiceClient {
                         .path("/users/find")
                         .queryParam("email", email)
                         .build())
+                .header("X-Gateway-Secret", "AlierInternalOnly123") 
                 .retrieve()
                 .bodyToMono(UserInfoDto.class)
                 .block();
