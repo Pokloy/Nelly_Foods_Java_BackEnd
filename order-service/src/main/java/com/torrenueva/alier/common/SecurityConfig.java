@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.torrenueva.alier.common.jwt.JwtFilter;
 
@@ -43,15 +44,20 @@ public class SecurityConfig {
 
         return http.build();
     }
+    
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public NewTopic userTopic(@Value("${app.kafka.topic.user-events}") String name) {
-        return TopicBuilder.name(name).partitions(1).replicas(1).build();
-    }
+//    @Bean
+//    public NewTopic orderTopic(@Value("${app.kafka.topic.order-events}") String name) {
+//        return TopicBuilder.name(name).partitions(1).replicas(1).build();
+//    }
 
 }

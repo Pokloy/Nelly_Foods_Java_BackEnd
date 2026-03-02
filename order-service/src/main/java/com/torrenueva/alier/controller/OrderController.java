@@ -25,9 +25,6 @@ public class OrderController {
 	@Autowired
 	private OrderService orderServ;
 	
-	@Autowired
-	private UserServiceClient test;
-	
 	@GetMapping
 	public ResponseEntity<List<OrderDto>> getAllProduct(){
 		List<OrderDto> getAllProduct = orderServ.getAllorder();
@@ -52,4 +49,11 @@ public class OrderController {
 				.body(result);
 	}
 	
+	@GetMapping("/find")
+	public ResponseEntity<OrderDto> findOrderById(@RequestParam(name="id") int id){
+		OrderDto result = orderServ.findOrderById(id);
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(result);
+	}
 }

@@ -35,59 +35,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
     private ObjectMapper objectMapper;
 	
-//	@Override
-//    public String addOrder(OrderDto orderDto) {
-//        LocalDateTime now = LocalDateTime.now();
-//        OrderEntity entity = new OrderEntity();
-//
-//        // 1. Fetch data from Product-Service & Calculate Subtotals
-//        List<ItemObject> processedItems = orderDto.getItems().stream()
-//            .map(item -> {
-//                ProductDto product = productServiceClient.getProductById(item.getProductId());              
-//                
-//                // Calculate Subtotal: Price * Quantity
-//                BigDecimal price = BigDecimal.valueOf(product.getPrice());
-//                BigDecimal subTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));
-//                
-//                item.setSubTotal(subTotal);
-//                return item;
-//            })
-//            .collect(Collectors.toList());
-//
-//        // 2. Calculate Total Price
-//        BigDecimal grandTotal = processedItems.stream()
-//            .map(ItemObject::getSubTotal)
-//            .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        // 3. Convert the List to JSON String for the JSONB column
-//        try {
-//            String itemsJson = objectMapper.writeValueAsString(processedItems);
-//            entity.setItems(itemsJson);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed to convert items to JSON", e);
-//        }
-//
-//        // 4. Populate other Entity fields
-//
-//        UserDto userDto = userServiceClient.getUserById(orderDto.getUserId());
-//        
-//        if(userDto.getFirstName() == null) {
-//        	return "No User found with Id: " + + orderDto.getUserId();
-//        } else if(userDto.getFirstName().equals("No Data")) {
-//        	return "No User found with Id: " + + orderDto.getUserId();
-//        } else {
-//            entity.setUserId(orderDto.getUserId());
-//            entity.setTotalPrice(grandTotal);
-//            entity.setStatus("Pending");
-//            entity.setDateOrder(now);
-//            entity.setUpdateDate(now);
-//            entity.setDeleteFlag(false);
-//
-//            orderRepository.saveAndFlush(entity);
-//            return "Order created successfully for User: " + orderDto.getUserId();
-//        }
-//    }
-	
+
 	public String addOrder(OrderDto orderDto) {
 	    LocalDateTime now = LocalDateTime.now();
 	    OrderEntity entity = new OrderEntity();
@@ -187,5 +135,33 @@ public class OrderServiceImpl implements OrderService {
 		
 		orderRepository.deleteSpecificOrder(orderId);
 		return "Order ID: " + orderId + " has been deleted successfully";
+	}
+	
+	@Override
+	public OrderDto findOrderById(int orderId) {
+		OrderEntity entity = orderRepository.findSpecificOrder(orderId);
+		OrderDto dto = new OrderDto();
+		if(entity==null) {
+			return dto;
+		}
+		dto.setUserId(entity.getUserId());
+		dto.setOrderId(entity.getOrderId());
+		dto.setStatus(entity.getStatus());
+		dto.setTotalPrice(entity.getTotalPrice());
+		dto.setUpdateDate(entity.getUpdateDate());
+		dto.setDateOrder(entity.getDateOrder());
+        // --- NEW LOGIC: Convert JSON String to List<ItemObject> ---
+        try {
+            List<ItemObject> itemList = objectMapper.readValue(
+                entity.getItems(), 
+                new TypeReference<List<ItemObject>>() {}
+            );
+            dto.setItems(itemList);
+        } catch (Exception e) {
+            // Handle case where JSON might be corrupted or null
+            dto.setItems(new ArrayList<>());
+            System.err.println("Error parsing JSON for order " + entity.getOrderId() + ": " + e.getMessage());
+        }
+		return dto;
 	}
 }

@@ -6,15 +6,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.torrenueva.alier.model.client.OrderServiceClient;
+import com.torrenueva.alier.model.client.UserServiceClient;
 import com.torrenueva.alier.model.dao.ShippingDao;
 import com.torrenueva.alier.model.dao.entity.ShippingEntity;
 import com.torrenueva.alier.model.dto.ShippingDto;
+import com.torrenueva.alier.model.dto.UserInfoDto;
+import com.torrenueva.alier.model.dto.OrderDto;
 import com.torrenueva.alier.model.service.ShippingService;
 
 @Service
 public class ShippingServiceImpl implements ShippingService {
 	@Autowired
 	private ShippingDao shippingDao;
+	
+	@Autowired
+	private UserServiceClient userServiceClient;
+	
+	@Autowired
+	private OrderServiceClient orderServiceClient;
 	
 	@Override
 	public List<ShippingDto> getAllShipping(){
@@ -43,14 +53,26 @@ public class ShippingServiceImpl implements ShippingService {
 	
 	@Override
 	public String addShipping(ShippingDto shippingDto) {
-		ShippingEntity entity = new ShippingEntity();
-		
 		if(shippingDto == null) {
 			return "No data inserted";
 		}
 		
-		entity.setOrderId(shippingDto.getOrderId());
-		entity.setUserId(shippingDto.getUserId());
+		ShippingEntity entity = new ShippingEntity();
+		
+		UserInfoDto userClient = userServiceClient.getUserById(shippingDto.getUserId());
+		
+		if(userClient.getUserId() == 0) {
+			return "No User found with Id: " + shippingDto.getUserId();
+		}
+		
+		OrderDto orderClient = orderServiceClient.getOrderById(shippingDto.getOrderId());
+		
+		if(orderClient.getOrderId() == 0) {
+			return "No Order found with Id: " + shippingDto.getOrderId();
+		}
+		
+		entity.setOrderId(orderClient.getOrderId());
+		entity.setUserId(userClient.getUserId());
 		entity.setTrackingNumber(shippingDto.getTrackingNumber());
 		entity.setStatus(shippingDto.getStatus());
 		entity.setDeleteflg(false);

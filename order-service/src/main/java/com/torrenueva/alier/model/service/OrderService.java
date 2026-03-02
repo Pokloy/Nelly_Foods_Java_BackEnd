@@ -8,4 +8,5 @@ public interface OrderService {
 	public String addOrder(OrderDto orderDto);
 	public List<OrderDto> getAllorder();
 	public String deleteOrder(int orderId);
+	public OrderDto findOrderById(int orderId);
 }
