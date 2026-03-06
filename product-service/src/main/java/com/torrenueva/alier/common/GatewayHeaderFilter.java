@@ -17,21 +17,18 @@ public class GatewayHeaderFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, java.io.IOException {
+        
+        String secret = request.getHeader("X-Gateway-Secret");
 
-    	String secret = request.getHeader("X-Gateway-Secret");
-
-        // Inside User Service: GatewayHeaderFilter.java
         if ("AlierInternalOnly123".equals(secret)) {
-            // Create a "System" authentication
-            UsernamePasswordAuthenticationToken internalAuth = 
-                new UsernamePasswordAuthenticationToken("SYSTEM_KAFKA", null, 
-                    AuthorityUtils.createAuthorityList("ROLE_INTERNAL"));
+            // We give this "System" caller the INTERNAL role and ADMIN role
+            // so it can pass any @PreAuthorize check.
+            var authorities = AuthorityUtils.createAuthorityList("ROLE_INTERNAL", "ROLE_ADMIN");
+
+            UsernamePasswordAuthenticationToken systemAuth = 
+                new UsernamePasswordAuthenticationToken("SYSTEM_PROCESS", null, authorities);
             
-            // Set it in the context so the JWT Filter is skipped/satisfied
-            SecurityContextHolder.getContext().setAuthentication(internalAuth);
-            
-            filterChain.doFilter(request, response);
-            return;
+            SecurityContextHolder.getContext().setAuthentication(systemAuth);
         }
 
         filterChain.doFilter(request, response);

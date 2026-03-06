@@ -27,6 +27,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDto.LoginRequest loginRequest) {
+    	System.out.println("User has been login");
+    	System.out.println(loginRequest);
         try {
             // 1. Ask the engine to check the username/password (BCrypt happens here)
             Authentication authentication = authenticationManager.authenticate(
@@ -39,9 +41,16 @@ public class AuthController {
             // 2. If we reach this line, the login was successful!
             // Generate the token using the method we wrote in Step 1
             String jwt = jwtUtils.generateToken(authentication);
+            
+         // Extract and clean the role
+            String role = authentication.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .findFirst()
+                    .map(r -> r.replace("ROLE_", "")) // ✅ Removes the prefix
+                    .orElse("USER"); // Default fallback if no role is found
 
             // 3. Return the token to Next.js
-            return ResponseEntity.ok(new LoginDto.LoginResponse(jwt));
+            return ResponseEntity.ok(new LoginDto.LoginResponse(jwt, role));
 
         } catch (AuthenticationException e) {
             // 4. If login fails, return 401 Unauthorized

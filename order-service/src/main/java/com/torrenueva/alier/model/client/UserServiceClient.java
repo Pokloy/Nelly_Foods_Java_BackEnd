@@ -39,6 +39,7 @@ public class UserServiceClient {
 	* Fallback method if product-service is down or failing.
 	*/
 	public UserDto fallbackGetUserById(int id, Throwable throwable) {
+		System.out.println(throwable);
 		UserDto fallback = new UserDto();
 		fallback.setUserId(0);
 		fallback.setFirstName("No Data");

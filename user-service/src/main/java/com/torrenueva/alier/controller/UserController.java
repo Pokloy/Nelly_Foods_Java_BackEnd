@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ public class UserController {
 	}
 	
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserInfoDto>> getAllUser(){
 		List<UserInfoDto> getAllUser = userService.getAllUsers();
 		return ResponseEntity
@@ -45,6 +47,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/find")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')") // ✅ CORRECT
 	public ResponseEntity<UserInfoDto> findUser(@RequestParam(name="email") String email) {
 	    UserInfoDto result = userService.findUserByEmail(email);
 	    return ResponseEntity
@@ -53,6 +56,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/update")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> updateUser(@RequestBody UserInfoDto userDto){
 		String result = userService.saveUser(userDto);
 		return ResponseEntity
@@ -61,6 +65,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/delete")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> deleteUser(
 			@RequestBody UserInfoDto email) {
 		String result = userService.deleteUserByEmail(email);
@@ -70,6 +75,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/findById")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')") // ✅ CORRECT
 	public ResponseEntity<UserInfoDto> findUserById(@RequestParam(name="id") int id) {
 	    UserInfoDto result = userService.findUserById(id);
 	    return ResponseEntity
